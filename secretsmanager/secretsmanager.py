@@ -5,11 +5,11 @@ import boto3
 from botocore.exceptions import ClientError
 
 logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 
 class SecretsService(object):
-    """ Wrapper for AWS Secrets Manager """
+    """Wrapper for AWS Secrets Manager"""
 
     SERVICE_NAME = "secretsmanager"
 
@@ -17,10 +17,7 @@ class SecretsService(object):
         """
         :param region_name:
         """
-        self._client = client(
-            service_name=self.SERVICE_NAME,
-            region_name=region_name
-        )
+        self._client = client(service_name=self.SERVICE_NAME, region_name=region_name)
 
     def _get_secret_value_response(self, secret_id: str):
         try:
@@ -39,7 +36,11 @@ class SecretsService(object):
         :return:
         """
         secret_value_response = self._get_secret_value_response(secret_id)
-        return secret_value_response['SecretString'] if 'SecretString' in secret_value_response else None
+        return (
+            secret_value_response["SecretString"]
+            if "SecretString" in secret_value_response
+            else None
+        )
 
 
 def _create_boto3_client():
@@ -50,10 +51,12 @@ def _create_boto3_client():
     else:
         boto3.session.Session(
             aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY")
+            aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
         )
         return boto3.client()
 
 
 def build_secrets_service():
-    return SecretsService(client=_create_boto3_client(), region_name=os.environ.get("REGION", "us-west-2"))
+    return SecretsService(
+        client=_create_boto3_client(), region_name=os.environ.get("REGION", "us-west-2")
+    )
