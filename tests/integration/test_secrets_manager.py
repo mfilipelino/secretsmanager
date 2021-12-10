@@ -12,15 +12,9 @@ def context():
     value = '{"env": "test"}'
 
     boto3_client = build_secrets_service()._client
-    boto3_client.create_secret(
-        Name=key,
-        SecretString=value
-    )
+    boto3_client.create_secret(Name=key, SecretString=value)
     yield key, value
-    boto3_client.delete_secret(
-        SecretId=key,
-        ForceDeleteWithoutRecovery=True
-    )
+    boto3_client.delete_secret(SecretId=key, ForceDeleteWithoutRecovery=True)
 
 
 @pytest.mark.integration
