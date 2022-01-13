@@ -48,12 +48,11 @@ def _create_boto3_client():
     if env == "sandbox":
         boto3.setup_default_session(profile_name=env)
         return boto3.client
-    else:
-        boto3.session.Session(
-            aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-            aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
-        )
-        return boto3.client()
+    boto3.session.Session(
+        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
+    )
+    return boto3.client()
 
 
 def build_secrets_service():
